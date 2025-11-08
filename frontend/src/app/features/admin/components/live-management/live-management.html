@@ -1,0 +1,157 @@
+<div class="container">
+  <h2>Gestion des lives</h2>
+
+  <button class="btn-create" (click)="showCreateForm()">+ Nouveau live</button>
+
+  @if (success()) {
+    <p class="success">{{ success() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <!-- FORMULAIRE -->
+  @if (showForm()) {
+    <div class="form-container">
+      <h3>{{ editMode() ? 'Modifier' : 'Créer' }} un live</h3>
+      
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="titre">Titre *</label>
+          <input 
+            type="text" 
+            id="titre"
+            [(ngModel)]="titre" 
+            name="titre"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea 
+            id="description"
+            [(ngModel)]="description" 
+            name="description"
+            rows="4"
+            required>
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="categorie">Catégorie *</label>
+          <select 
+            id="categorie"
+            [(ngModel)]="categorie" 
+            name="categorie"
+            required>
+            <option value="">Sélectionnez une catégorie</option>
+            @for (cat of categorieService.categories(); track cat.id) {
+              <option [value]="cat.nom">{{ cat.nom }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="dateDebut">Date et heure de début *</label>
+          <input 
+            type="datetime-local" 
+            id="dateDebut"
+            [(ngModel)]="dateDebut" 
+            name="dateDebut"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="thumbnail">URL Thumbnail</label>
+          <input 
+            type="text" 
+            id="thumbnail"
+            [(ngModel)]="thumbnail" 
+            name="thumbnail"
+            placeholder="https://..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="urlLive">URL YouTube Live</label>
+          <input 
+            type="text" 
+            id="urlLive"
+            [(ngModel)]="urlLive" 
+            name="urlLive"
+            placeholder="https://www.youtube.com/watch?v=..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="statut">Statut</label>
+          <select 
+            id="statut"
+            [(ngModel)]="statut" 
+            name="statut">
+            <option value="A_VENIR">À venir</option>
+            <option value="EN_COURS">En cours</option>
+            <option value="TERMINE">Terminé</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">
+            {{ editMode() ? 'Modifier' : 'Créer' }}
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancel()">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- LISTE DES LIVES -->
+  @if (loading()) {
+    <p>Chargement...</p>
+  } @else if (lives().length > 0) {
+    <div class="lives-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Catégorie</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (live of lives(); track live.id) {
+            <tr>
+              <td>{{ live.titre }}</td>
+              <td>{{ live.categorie }}</td>
+              <td>{{ live.dateDebut | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>
+                <span class="badge" [class]="'badge-' + live.statut.toLowerCase()">
+                  {{ live.statut }}
+                </span>
+              </td>
+              <td class="actions">
+                @if (live.statut === 'A_VENIR') {
+                  <button class="btn-start" (click)="startLive(live.id)">▶️ Démarrer</button>
+                }
+                @if (live.statut === 'EN_COURS') {
+                  <button class="btn-end" (click)="endLive(live.id)">⏹️ Terminer</button>
+                }
+                <button class="btn-edit" (click)="editLive(live)">✏️</button>
+                <button class="btn-delete" (click)="deleteLive(live.id)">🗑️</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p>Aucun live</p>
+  }
+</div>

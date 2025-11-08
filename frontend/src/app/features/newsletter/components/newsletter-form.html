@@ -1,0 +1,29 @@
+<div class="container">
+  <h2>Inscrivez-vous à la newsletter</h2>
+  <p>Recevez les notifications des prochains lives et nouvelles vidéos !</p>
+
+  @if (success()) {
+    <div class="success">
+      <p>✅ Inscription réussie ! Merci de votre confiance.</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <form (ngSubmit)="onSubscribe()">
+    <div class="form-group">
+      <input 
+        type="email" 
+        [(ngModel)]="email" 
+        name="email"
+        placeholder="Votre email"
+        required
+      />
+      <button type="submit">S'inscrire</button>
+    </div>
+  </form>
+</div>

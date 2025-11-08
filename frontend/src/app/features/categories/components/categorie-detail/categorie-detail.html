@@ -1,0 +1,32 @@
+<div class="container">
+  <h1>Catégorie : {{ categorieNom }}</h1>
+
+  @if (videoService.loading()) {
+    <p>Chargement...</p>
+  } @else if (videoService.videos().length > 0) {
+    <div class="videos-grid">
+      @for (video of videoService.videos(); track video.id) {
+        <div class="video-card">
+          <a [routerLink]="['/videos', video.id]">
+            <img [src]="video.thumbnail" [alt]="video.titre">
+            <div class="video-info">
+              <h3>{{ video.titre }}</h3>
+              <p class="date">{{ video.datePublication | date:'dd/MM/yyyy' }}</p>
+              <p class="duration">{{ video.duree }}s</p>
+              @if (video.stats) {
+                <div class="stats">
+                  <span>👁️ {{ video.stats.vues }}</span>
+                  <span>❤️ {{ video.stats.favoris }}</span>
+                </div>
+              }
+            </div>
+          </a>
+        </div>
+      }
+    </div>
+  } @else {
+    <p>Aucune vidéo dans cette catégorie</p>
+  }
+
+  <a routerLink="/categories" class="btn-back">← Retour aux catégories</a>
+</div>

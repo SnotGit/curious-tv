@@ -1,0 +1,42 @@
+<div class="container">
+  <h2>Messages de contact</h2>
+
+  @if (contactService.loading()) {
+    <p>Chargement...</p>
+  } @else if (contactService.contacts().length > 0) {
+    <div class="contacts-list">
+      @for (contact of contactService.contacts(); track contact.id) {
+        <div class="contact-card" [class.unread]="!contact.lu">
+          <div class="contact-header">
+            <h3>{{ contact.sujet }}</h3>
+            @if (!contact.lu) {
+              <span class="badge-new">Nouveau</span>
+            }
+          </div>
+          
+          <div class="contact-info">
+            <p><strong>De :</strong> {{ contact.nom }} ({{ contact.email }})</p>
+            <p><strong>Date :</strong> {{ contact.dateEnvoi | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+
+          <div class="contact-message">
+            <p>{{ contact.message }}</p>
+          </div>
+
+          <div class="contact-actions">
+            @if (!contact.lu) {
+              <button class="btn-read" (click)="markAsRead(contact.id)">
+                ✓ Marquer comme lu
+              </button>
+            }
+            <button class="btn-delete" (click)="deleteContact(contact.id)">
+              🗑️ Supprimer
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <p>Aucun message</p>
+  }
+</div>

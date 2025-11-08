@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String
+  role         Role     @default(VIEWER)
+  favoris      String[]
+  dateCreation DateTime @default(now())
+  
+  @@map("users")
+}
+
+model Video {
+  id              String      @id @default(uuid())
+  titre           String
+  description     String
+  urlYoutube      String
+  categorie       String
+  datePublication DateTime
+  duree           Int
+  thumbnail       String
+  statut          StatutVideo @default(BROUILLON)
+  tags            String[]
+  stats           Stats?
+  
+  @@map("videos")
+}
+
+model Categorie {
+  id          String @id @default(uuid())
+  nom         String @unique
+  icone       String
+  description String
+  ordre       Int    @default(0)
+  
+  @@map("categories")
+}
+
+model ProchaineSortie {
+  id          String     @id @default(uuid())
+  titre       String
+  categorie   String
+  dateDebut   DateTime
+  description String
+  thumbnail   String?
+  urlLive     String?
+  statut      StatutLive @default(A_VENIR)
+  
+  @@map("prochaines_sorties")
+}
+
+model Newsletter {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  actif           Boolean  @default(true)
+  dateInscription DateTime @default(now())
+  
+  @@map("newsletters")
+}
+
+model Stats {
+  id      String @id @default(uuid())
+  videoId String @unique
+  vues    Int    @default(0)
+  favoris Int    @default(0)
+  video   Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  
+  @@map("stats")
+}
+
+model Contact {
+  id         String   @id @default(uuid())
+  nom        String
+  email      String
+  sujet      String
+  message    String
+  dateEnvoi  DateTime @default(now())
+  lu         Boolean  @default(false)
+  
+  @@map("contacts")
+}
+
+enum Role {
+  ADMIN
+  VIEWER
+}
+
+enum StatutVideo {
+  BROUILLON
+  PUBLIE
+  PROGRAMME
+}
+
+enum StatutLive {
+  A_VENIR
+  EN_COURS
+  TERMINE
+}

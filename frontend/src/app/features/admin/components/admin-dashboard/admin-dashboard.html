@@ -1,0 +1,69 @@
+<div class="container">
+  <h1>Dashboard Admin</h1>
+
+  <!-- STATISTIQUES GLOBALES -->
+  <section class="stats">
+    <div class="stat-card">
+      <h3>Total vues</h3>
+      <p class="big-number">{{ adminService.getTotalViews() }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Total favoris</h3>
+      <p class="big-number">{{ adminService.getTotalFavoris() }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Vidéos publiées</h3>
+      <p class="big-number">{{ videoService.videos().length }}</p>
+    </div>
+    <div class="stat-card">
+      <h3>Abonnés newsletter</h3>
+      <p class="big-number">{{ newsletterService.subscribers().length }}</p>
+    </div>
+  </section>
+
+  <!-- NAVIGATION ADMIN -->
+  <section class="admin-nav">
+    <a routerLink="/admin/videos" class="btn">📹 Gérer les vidéos</a>
+    <a routerLink="/admin/categories" class="btn">📂 Gérer les catégories</a>
+    <a routerLink="/admin/lives" class="btn">🔴 Gérer les lives</a>
+    <a routerLink="/admin/contacts" class="btn">📧 Messages</a>
+    <a routerLink="/admin/newsletter" class="btn">📬 Abonnés</a>
+  </section>
+
+  <!-- STATISTIQUES DÉTAILLÉES -->
+  @if (adminService.loading()) {
+    <p>Chargement des statistiques...</p>
+  } @else if (adminService.stats().length > 0) {
+    <section class="stats-details">
+      <h2>Statistiques des vidéos</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Vidéo</th>
+            <th>Catégorie</th>
+            <th>Vues</th>
+            <th>Favoris</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (stat of adminService.stats(); track stat.id) {
+            <tr>
+              <td>{{ stat.video.titre }}</td>
+              <td>{{ stat.video.categorie }}</td>
+              <td>{{ stat.vues }}</td>
+              <td>{{ stat.favoris }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
+
+  <!-- CONTACTS NON LUS -->
+  @if (contactService.contacts().length > 0) {
+    <section class="contacts-preview">
+      <h2>Derniers messages ({{ getUnreadContactsCount() }} non lus)</h2>
+      <a routerLink="/admin/contacts" class="btn">Voir tous les messages →</a>
+    </section>
+  }
+</div>

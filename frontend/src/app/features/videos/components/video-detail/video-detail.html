@@ -1,0 +1,59 @@
+<div class="video-detail-container">
+  @if (videoService.loading()) {
+    <p>Chargement...</p>
+  } @else if (videoService.selectedVideo()) {
+    <div class="video-content">
+      <div class="video-player">
+        <iframe 
+          [src]="getYoutubeEmbedUrl(videoService.selectedVideo()!.urlYoutube)" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <div class="video-info">
+        <h1>{{ videoService.selectedVideo()!.titre }}</h1>
+        
+        <div class="video-meta">
+          <span class="category">{{ videoService.selectedVideo()!.categorie }}</span>
+          <span class="date">{{ videoService.selectedVideo()!.datePublication | date:'dd/MM/yyyy' }}</span>
+          <span class="duration">{{ videoService.selectedVideo()!.duree }}s</span>
+        </div>
+
+        @if (videoService.selectedVideo()!.stats) {
+          <div class="stats">
+            <span>👁️ {{ videoService.selectedVideo()!.stats!.vues }} vues</span>
+            <span>❤️ {{ videoService.selectedVideo()!.stats!.favoris }} favoris</span>
+          </div>
+        }
+
+        <button 
+          class="btn-favori" 
+          (click)="toggleFavori()">
+          @if (favorisService.isFavori(videoService.selectedVideo()!.id)) {
+            ❤️ Retirer des favoris
+          } @else {
+            🤍 Ajouter aux favoris
+          }
+        </button>
+
+        <div class="description">
+          <h3>Description</h3>
+          <p>{{ videoService.selectedVideo()!.description }}</p>
+        </div>
+
+        @if (videoService.selectedVideo()!.tags.length > 0) {
+          <div class="tags">
+            <h3>Tags</h3>
+            @for (tag of videoService.selectedVideo()!.tags; track tag) {
+              <span class="tag">{{ tag }}</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  } @else {
+    <p>Vidéo non trouvée</p>
+  }
+</div>

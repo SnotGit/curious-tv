@@ -1,0 +1,172 @@
+<div class="container">
+  <h2>Gestion des vidéos</h2>
+
+  <button class="btn-create" (click)="showCreateForm()">+ Nouvelle vidéo</button>
+
+  @if (success()) {
+    <p class="success">{{ success() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <!-- FORMULAIRE -->
+  @if (showForm()) {
+    <div class="form-container">
+      <h3>{{ editMode() ? 'Modifier' : 'Créer' }} une vidéo</h3>
+      
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="titre">Titre *</label>
+          <input 
+            type="text" 
+            id="titre"
+            [(ngModel)]="titre" 
+            name="titre"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea 
+            id="description"
+            [(ngModel)]="description" 
+            name="description"
+            rows="4">
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="urlYoutube">URL YouTube *</label>
+          <input 
+            type="text" 
+            id="urlYoutube"
+            [(ngModel)]="urlYoutube" 
+            name="urlYoutube"
+            placeholder="https://www.youtube.com/watch?v=..."
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="categorie">Catégorie *</label>
+          <select 
+            id="categorie"
+            [(ngModel)]="categorie" 
+            name="categorie"
+            required>
+            <option value="">Sélectionnez une catégorie</option>
+            @for (cat of categorieService.categories(); track cat.id) {
+              <option [value]="cat.nom">{{ cat.nom }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="datePublication">Date de publication *</label>
+          <input 
+            type="date" 
+            id="datePublication"
+            [(ngModel)]="datePublication" 
+            name="datePublication"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="duree">Durée (secondes)</label>
+          <input 
+            type="number" 
+            id="duree"
+            [(ngModel)]="duree" 
+            name="duree"
+            min="0"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="thumbnail">URL Thumbnail *</label>
+          <input 
+            type="text" 
+            id="thumbnail"
+            [(ngModel)]="thumbnail" 
+            name="thumbnail"
+            placeholder="https://..."
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="statut">Statut</label>
+          <select 
+            id="statut"
+            [(ngModel)]="statut" 
+            name="statut">
+            <option value="BROUILLON">Brouillon</option>
+            <option value="PUBLIE">Publié</option>
+            <option value="PROGRAMME">Programmé</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tags (séparés par des virgules)</label>
+          <input 
+            type="text" 
+            id="tags"
+            [(ngModel)]="tags" 
+            name="tags"
+            placeholder="angular, typescript, tutorial"
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">
+            {{ editMode() ? 'Modifier' : 'Créer' }}
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancel()">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- LISTE DES VIDÉOS -->
+  @if (videoService.loading()) {
+    <p>Chargement...</p>
+  } @else if (videoService.videos().length > 0) {
+    <div class="videos-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Thumbnail</th>
+            <th>Titre</th>
+            <th>Catégorie</th>
+            <th>Date</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (video of videoService.videos(); track video.id) {
+            <tr>
+              <td><img [src]="video.thumbnail" [alt]="video.titre" width="80"></td>
+              <td>{{ video.titre }}</td>
+              <td>{{ video.categorie }}</td>
+              <td>{{ video.datePublication | date:'dd/MM/yyyy' }}</td>
+              <td>{{ video.statut }}</td>
+              <td class="actions">
+                <button class="btn-edit" (click)="editVideo(video)">✏️</button>
+                <button class="btn-delete" (click)="deleteVideo(video.id)">🗑️</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p>Aucune vidéo</p>
+  }
+</div>

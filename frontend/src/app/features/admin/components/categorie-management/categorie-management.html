@@ -1,0 +1,111 @@
+<div class="container">
+  <h2>Gestion des catégories</h2>
+
+  <button class="btn-create" (click)="showCreateForm()">+ Nouvelle catégorie</button>
+
+  @if (success()) {
+    <p class="success">{{ success() }}</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <!-- FORMULAIRE -->
+  @if (showForm()) {
+    <div class="form-container">
+      <h3>{{ editMode() ? 'Modifier' : 'Créer' }} une catégorie</h3>
+      
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input 
+            type="text" 
+            id="nom"
+            [(ngModel)]="nom" 
+            name="nom"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="icone">Icône (emoji)</label>
+          <input 
+            type="text" 
+            id="icone"
+            [(ngModel)]="icone" 
+            name="icone"
+            placeholder="🎨"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea 
+            id="description"
+            [(ngModel)]="description" 
+            name="description"
+            rows="3"
+            required>
+          </textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="ordre">Ordre d'affichage</label>
+          <input 
+            type="number" 
+            id="ordre"
+            [(ngModel)]="ordre" 
+            name="ordre"
+            min="0"
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">
+            {{ editMode() ? 'Modifier' : 'Créer' }}
+          </button>
+          <button type="button" class="btn-cancel" (click)="cancel()">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- LISTE DES CATÉGORIES -->
+  @if (categorieService.loading()) {
+    <p>Chargement...</p>
+  } @else if (categorieService.categories().length > 0) {
+    <div class="categories-list">
+      <table>
+        <thead>
+          <tr>
+            <th>Icône</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Ordre</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (categorie of categorieService.categories(); track categorie.id) {
+            <tr>
+              <td class="icon">{{ categorie.icone }}</td>
+              <td>{{ categorie.nom }}</td>
+              <td>{{ categorie.description }}</td>
+              <td>{{ categorie.ordre }}</td>
+              <td class="actions">
+                <button class="btn-edit" (click)="editCategorie(categorie)">✏️</button>
+                <button class="btn-delete" (click)="deleteCategorie(categorie.id)">🗑️</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <p>Aucune catégorie</p>
+  }
+</div>

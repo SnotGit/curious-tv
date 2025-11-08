@@ -1,0 +1,41 @@
+<div class="container">
+  <h1>Recherche de vidéos</h1>
+
+  <div class="search-form">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      (keyup.enter)="onSearch()"
+      placeholder="Rechercher une vidéo..."
+    />
+    <button (click)="onSearch()">🔍 Rechercher</button>
+    @if (rechercheService.query()) {
+      <button (click)="clearSearch()" class="btn-clear">✖️ Effacer</button>
+    }
+  </div>
+
+  @if (rechercheService.loading()) {
+    <p>Recherche en cours...</p>
+  } @else if (rechercheService.results().length > 0) {
+    <div class="results">
+      <p>{{ rechercheService.results().length }} résultat(s) pour "{{ rechercheService.query() }}"</p>
+      
+      <div class="grid">
+        @for (video of rechercheService.results(); track video.id) {
+          <div class="card">
+            <a [routerLink]="['/videos', video.id]">
+              <img [src]="video.thumbnail" [alt]="video.titre">
+              <div class="info">
+                <h3>{{ video.titre }}</h3>
+                <p class="category">{{ video.categorie }}</p>
+                <p class="date">{{ video.datePublication | date:'dd/MM/yyyy' }}</p>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (rechercheService.query()) {
+    <p>Aucun résultat pour "{{ rechercheService.query() }}"</p>
+  }
+</div>

@@ -1,0 +1,66 @@
+<div class="home-container">
+  <!-- SECTION LIVE -->
+  <section class="live-section">
+    @if (homeService.currentLive()) {
+      <div class="live-active">
+        <h2>🔴 Live en direct</h2>
+        <h3>{{ homeService.currentLive()!.titre }}</h3>
+        <p>{{ homeService.currentLive()!.description }}</p>
+        
+        @if (homeService.currentLive()!.urlLive) {
+          <div class="live-player">
+            <iframe 
+              [src]="getYoutubeEmbedUrl(homeService.currentLive()!.urlLive!)" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        }
+      </div>
+    } @else if (homeService.nextLive()) {
+      <div class="live-countdown">
+        <h2>Prochain Live</h2>
+        <h3>{{ homeService.nextLive()!.titre }}</h3>
+        <p>{{ homeService.nextLive()!.description }}</p>
+        
+        @if (homeService.nextLive()!.thumbnail) {
+          <img [src]="homeService.nextLive()!.thumbnail" [alt]="homeService.nextLive()!.titre">
+        }
+        
+        <div class="countdown">
+          <p class="countdown-timer">{{ homeService.countdown() }}</p>
+        </div>
+      </div>
+    } @else {
+      <div class="no-live">
+        <h2>Aucun live prévu pour le moment</h2>
+        <p>Restez connectés pour ne pas manquer les prochains lives !</p>
+      </div>
+    }
+  </section>
+
+  <!-- SECTION DERNIÈRES VIDÉOS -->
+  <section class="latest-videos">
+    <h2>Dernières vidéos</h2>
+    
+    @if (homeService.loading()) {
+      <p>Chargement...</p>
+    } @else if (homeService.latestVideos().length > 0) {
+      <div class="video-carousel">
+        @for (video of homeService.latestVideos(); track video.id) {
+          <div class="video-card">
+            <a [routerLink]="['/videos', video.id]">
+              <img [src]="video.thumbnail" [alt]="video.titre">
+              <h3>{{ video.titre }}</h3>
+              <p class="category">{{ video.categorie }}</p>
+              <p class="duration">{{ video.duree }}s</p>
+            </a>
+          </div>
+        }
+      </div>
+    } @else {
+      <p>Aucune vidéo disponible</p>
+    }
+  </section>
+</div>

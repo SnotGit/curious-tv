@@ -1,0 +1,21 @@
+<div class="categorie-list-container">
+  <h1>Catégories</h1>
+
+  @if (categorieService.loading()) {
+    <p>Chargement...</p>
+  } @else if (categorieService.categories().length > 0) {
+    <div class="categories-grid">
+      @for (categorie of categorieService.categories(); track categorie.id) {
+        <div class="categorie-card">
+          <a [routerLink]="['/categories', categorie.nom]">
+            <div class="categorie-icon">{{ categorie.icone }}</div>
+            <h3>{{ categorie.nom }}</h3>
+            <p>{{ categorie.description }}</p>
+          </a>
+        </div>
+      }
+    </div>
+  } @else {
+    <p>Aucune catégorie disponible</p>
+  }
+</div>
