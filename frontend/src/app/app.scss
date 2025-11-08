@@ -1,0 +1,241 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+}
+
+.sidebar {
+  width: 16rem;
+  background-color: var(--color-bg-secondary);
+  border-right: 2px solid var(--color-accent);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+
+  &-header {
+    padding: 1.5rem;
+    border-bottom: 2px solid var(--color-accent);
+
+    .logo-wrapper {
+      position: relative;
+
+      &.glitch {
+        animation: glitch-pulse 0.2s ease;
+      }
+
+      .logo-title {
+        font-size: 1.875rem;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        color: var(--color-text-primary);
+        font-family: 'Roboto Mono', monospace;
+        line-height: 1.2;
+
+        .logo-play {
+          color: var(--color-accent);
+        }
+      }
+
+      .glitch-overlay {
+        position: absolute;
+        inset: 0;
+        background-color: var(--color-accent);
+        opacity: 0.2;
+        animation: ping 0.2s ease;
+      }
+    }
+
+    .status-indicator {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      font-family: 'Roboto Mono', monospace;
+
+      .status-dot {
+        color: var(--color-accent);
+        animation: pulse-dot 2s infinite;
+      }
+    }
+  }
+
+  &-nav {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .nav-title {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      font-family: 'Roboto Mono', monospace;
+      margin-bottom: 1rem;
+    }
+
+    .channel-button {
+      width: 100%;
+      background-color: var(--color-bg-tertiary);
+      border: 2px solid var(--color-border);
+      padding: 1rem;
+      text-align: left;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      &:hover {
+        border-color: var(--color-accent);
+        background-color: var(--color-accent-bg);
+
+        .channel-number {
+          color: var(--color-accent-light);
+        }
+      }
+
+      .channel-number {
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: var(--color-accent);
+        font-family: 'Roboto Mono', monospace;
+        transition: color 0.2s ease;
+      }
+
+      .channel-info {
+        .channel-code {
+          font-size: 0.75rem;
+          color: var(--color-text-tertiary);
+          font-family: 'Roboto Mono', monospace;
+        }
+
+        .channel-label {
+          font-weight: 700;
+          font-size: 0.875rem;
+          color: var(--color-text-primary);
+        }
+      }
+
+      &.active {
+        border-color: var(--color-accent);
+        background-color: var(--color-accent-bg);
+      }
+    }
+  }
+
+  &-footer {
+    padding: 1.5rem;
+    border-top: 2px solid var(--color-accent);
+
+    .admin-button {
+      width: 100%;
+      background-color: var(--color-accent);
+      color: var(--color-text-light);
+      font-weight: 700;
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--color-accent-lighter);
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--color-accent-light);
+      }
+
+      .admin-label {
+        font-size: 0.75rem;
+        font-family: 'Roboto Mono', monospace;
+      }
+
+      .admin-text {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: var(--color-bg-primary);
+
+  .content-container {
+    max-width: 1750px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 4rem;
+
+    &-header {
+      .logo-title {
+        font-size: 1rem;
+        writing-mode: vertical-rl;
+      }
+
+      .status-indicator {
+        display: none;
+      }
+    }
+
+    &-nav {
+      .nav-title {
+        writing-mode: vertical-rl;
+      }
+
+      .channel-button {
+        flex-direction: column;
+        padding: 0.75rem 0.5rem;
+
+        .channel-info {
+          display: none;
+        }
+      }
+    }
+
+    &-footer {
+      .admin-button {
+        .admin-label,
+        .admin-text {
+          font-size: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    flex-direction: row;
+    border-right: none;
+    border-bottom: 2px solid var(--color-accent);
+
+    &-header {
+      border-bottom: none;
+      border-right: 2px solid var(--color-accent);
+    }
+
+    &-nav {
+      flex-direction: row;
+      overflow-x: auto;
+      padding: 1rem;
+    }
+
+    &-footer {
+      border-top: none;
+      border-left: 2px solid var(--color-accent);
+    }
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}
